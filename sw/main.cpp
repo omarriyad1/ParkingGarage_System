@@ -1,37 +1,13 @@
 #include <iostream>
 
 using namespace std;
-/*class Duration{
 
-private:
-    int arrive_time;
-    int leave_time ;
-public:
-    Duration(int arrive=0,int leave=0){
-    arrive_time=arrive;
-    leave_time=leave;
-    }
-    void setArrive_time(int arrive){
-    arrive_time=arrive;
-    }
-    void setLeave_time(int leave){
-    leave_time=leave;
-    }
-    int getArrive_time(){
-    return arrive_time;
-    }
-    int getLeave_time(){
-    return leave_time;
-    }
-
-};*/
 class vehicle
 {
 public:
     string model_name;
     int ID;
     int model_year;
-    //Duration time;
     int location;
     int length;
     int width;
@@ -45,6 +21,13 @@ public:
         length=len;
         width=wid;
     }
+    void  setVehicle(string name,int num,int year,int len,int wid){
+        model_name=name;
+        ID=num;
+        model_year=year;
+        length=len;
+        width=wid;
+    }
 
 };
 class GarageSlot
@@ -52,9 +35,10 @@ class GarageSlot
 public:
     int length ;
     int width ;
-    GarageSlot(int s)
+    char* arr;
+    GarageSlot()
     {
-        arr=new char[s];
+        arr=new char[40];
         for(int i=0; i<40; i++)
         {
             arr[i]='_';
@@ -63,13 +47,15 @@ public:
                 length =200;
                 width = 120 ;
             }
-            else
+            else{
                 length =240;
                 width = 140 ;
+            }
+
         }
     }
 
-    char* arr;
+
     int siz;
     vehicle* v;
     bool free;
@@ -88,6 +74,7 @@ public:
         free = true;
         arr[count]='_';
         counter--;
+        return free;
     }
     int calulate_totalNum()
     {
@@ -96,28 +83,31 @@ public:
 };
 class slotselection{
     //Garage * objj;
-    GarageSlot*d;
+
 public:
-    int place = 0;
-    int slotselectionn(vehicle ve)
+    GarageSlot*d;
+    slotselection(){
+        d=new GarageSlot;
+    }
+    int place = -1;
+    int slotselectionn(vehicle ve , GarageSlot *g)
     {
-        if (ve.length == 200 &&ve.width==120)
+        d=g;
+        if (ve.length <= 200 && ve.width <= 120)
         {
             for(int j=0; j<20; j++)
             {
                 if(d->arr[j]=='_')
                 {
-                    cout<<"slot[" <<j<<"is the best place"<<endl;
-                    place = j ;
+                    cout<<"slot[" <<j<<"]is the best place"<<endl;
+                    place =j;
                     return j;
                 }
-                else
-                    cout << "no place" << endl;
-                    place =0;
-                    return 0;
             }
+            cout << "no place" << endl;
+            return 0;
         }
-        else if (ve.length == 240 && ve.width==140)
+        else if (ve.length <= 240 &&ve.width <= 140)
         {
             for(int j=20; j<40; j++)
             {
@@ -127,12 +117,14 @@ public:
                     place = j ;
                     return j;
                 }
-                else
-                    cout << "no place" << endl;
-                    place =0;
-                    return 0;
+
             }
+            cout << "no place" << endl;
+                return 0;
         }
+        else
+            cout << "no place" << endl;
+                return 0;
     }
 
 
@@ -142,7 +134,7 @@ class Garage
 public:
     Garage(int s)
     {
-        this->slots=new GarageSlot(s);
+        this->slots=new GarageSlot();
     }
     vehicle* obj;
     GarageSlot* slots;
@@ -153,26 +145,26 @@ public:
     double total_income=0;
     void parkin(vehicle* v)
     {
-        ss->slotselectionn(*v);
-        if (ss->place > 0)
+        ss->slotselectionn(*v,slots);
+        if (ss->place >= 0)
         {
 
-        cout<<"enter the arrival time"<<endl;
-        cin>>arrive_time;
-        slots->addVehicle(v);
+            cout<<"enter the arrival time"<<endl;
+            cin>>arrive_time;
+            slots->addVehicle(v);
 
         }
         else
             cout<< "sorry noplace for your car"<<endl;
 
-       // obj= v;
-       // v->time.setArrive_time(arrive);
+        // obj= v;
+        // v->time.setArrive_time(arrive);
     }
     void parkout(vehicle* v)
     {
         cout<<"enter the leave time"<<endl;
         cin>>departure_time;
-  //      obj=v;
+        //      obj=v;
 //        v->time.setLeave_time(departure);
         //dur= Duration(v->time.getArrive_time(),v->time.getLeave_time());
         //total_income+=v->time.getLeave_time()-v->time.getArrive_time();
@@ -186,7 +178,7 @@ class parkingfees
 {
 public:
 //int Duration;
-Garage g;
+    Garage g;
     double print_fees()
     {
         cout<<"the fees"<<g.departure_time-g.arrive_time*5<<endl;//check
@@ -209,7 +201,7 @@ int main()
     cout<<"enter the size of the parking"<<endl;
     cin>>siz;
     Garage p(siz);
-    vehicle* veh;
+    vehicle *veh;
 
     do
     {
@@ -235,7 +227,8 @@ int main()
             cin >> length;
             cout << "Enter the vehicle's width: ";
             cin >> width;
-            veh=new vehicle(model_name, ID, model_year,length,width);
+
+            veh->setVehicle(model_name, ID, model_year,length,width);
             p.parkin(veh);
         }
         else if (choice==2)
