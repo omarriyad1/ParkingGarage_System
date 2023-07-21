@@ -1,37 +1,12 @@
 #include <iostream>
 
 using namespace std;
-/*class Duration{
-
-private:
-    int arrive_time;
-    int leave_time ;
-public:
-    Duration(int arrive=0,int leave=0){
-    arrive_time=arrive;
-    leave_time=leave;
-    }
-    void setArrive_time(int arrive){
-    arrive_time=arrive;
-    }
-    void setLeave_time(int leave){
-    leave_time=leave;
-    }
-    int getArrive_time(){
-    return arrive_time;
-    }
-    int getLeave_time(){
-    return leave_time;
-    }
-
-};*/
 class vehicle
 {
 public:
     string model_name;
     int ID;
     int model_year;
-    //Duration time;
     int location;
     int length;
     int width;
@@ -53,7 +28,8 @@ public:
         length=len;
         width=wid;
     }
-    void  setVehicle(std::string name,int num,int year,int len,int wid){
+    void  setVehicle(std::string name,int num,int year,int len,int wid)
+    {
         model_name=name;
         ID=num;
         model_year=year;
@@ -79,7 +55,8 @@ public:
                 length =200;
                 width = 120 ;
             }
-            else{
+            else
+            {
                 length =240;
                 width = 140 ;
             }
@@ -94,7 +71,7 @@ public:
     int counter=0;
     bool addVehicle(vehicle v)
     {
-       // this->v = v;
+        // this->v = v;
         free = false;
         arr[counter]='*';
         v.location=counter;
@@ -112,15 +89,16 @@ public:
         return counter;
     }
 };
-class slotselection{
-    //Garage * objj;
+class slotselection
+{
     GarageSlot*d;
 public:
-    slotselection(){
+    slotselection()
+    {
         d=new GarageSlot;
     }
     int place = -1;
-    int slotselectionn(vehicle ve , GarageSlot *g)
+    int slotselectionn(vehicle ve, GarageSlot *g)
     {
         d=g;
         if (ve.length <= 200 &&ve.width<=120)
@@ -129,14 +107,11 @@ public:
             {
                 if(d->arr[j]=='_')
                 {
-                    cout<<"slot[" <<j<<"]is the best place"<<endl;
+                    cout<<"slot[" <<j+1<<"]is the best place"<<endl;
                     place = j ;
                     return j;
                 }
             }
-            //cout << "no place" << endl;
-            //place =0;
-            //return 0;
         }
         else if (ve.length <= 240 &&ve.width<=140)
         {
@@ -159,8 +134,8 @@ public:
         }
 
 
-        }
-    } ;
+    }
+} ;
 
 
 
@@ -178,31 +153,27 @@ public:
     int arrive_time,departure_time;
     //parkingfees pay;
     double total_income=0;
-    void parkin(vehicle v)
+    void parkin(vehicle v,int x)
     {
         if(v.length>240 ||v.width>140)
         {
-            cout << "sorry noplace for your car"<<endl ;
+            throw x;
         }
         else
         {
             ss->slotselectionn(v,slots);
-        if (ss->place >= 0)
-        {
+            if (ss->place >= 0)
+            {
 
-            cout<<"enter the arrival time"<<endl;
-            cin>>arrive_time;
-            slots->addVehicle(v);
+                cout<<"enter the arrival time"<<endl;
+                cin>>arrive_time;
+                slots->addVehicle(v);
+
+            }
+            else
+                cout<< "sorry no place for your car"<<endl;
 
         }
-        else
-            cout<< "sorry noplace for your car"<<endl;
-
-        }
-
-
-        // obj= v;
-        // v->time.setArrive_time(arrive);
     }
     void parkout(vehicle v)
     {
@@ -212,9 +183,9 @@ public:
 
         if(v.length<=200&&v.width<=120)
         {
-           cout<<"the fees"<<dur*10<<endl;
-           total_income+=(departure_time-arrive_time)*10;
-        slots->deleteVehicle(v.location);
+            cout<<"the fees"<<dur*10<<endl;
+            total_income+=(departure_time-arrive_time)*10;
+            slots->deleteVehicle(v.location);
         }
         else
         {
@@ -228,7 +199,6 @@ public:
 class parkingfees
 {
 public:
-//int Duration;
     Garage g;
     vehicle v;
     double print_fees()
@@ -290,7 +260,14 @@ int main()
             cin >> width;
 
             veh.setVehicle(model_name, ID, model_year,length,width);
-            p.parkin(veh);
+            try
+            {
+                p.parkin(veh,0);
+            }
+            catch(...)
+            {
+                cout<<"sorry there is no place for your car"<<endl;
+            }
         }
         else if (choice==2)
         {
