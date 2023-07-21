@@ -43,14 +43,21 @@ class GarageSlot
 public:
     int length ;
     int width ;
-    char* arr;
+    int x;
+
+    char* grageslots;
     GarageSlot()
     {
-        arr=new char[40];
-        for(int i=0; i<40; i++)
+
+    }
+    GarageSlot(int m)
+    {
+        grageslots=new char[m];
+        for(int i=0; i<m; i++)
         {
-            arr[i]='_';
-            if(i<20)
+            grageslots[i]='_';
+            x = m / 2 ;
+            if(i<x)
             {
                 length =200;
                 width = 120 ;
@@ -73,7 +80,7 @@ public:
     {
         // this->v = v;
         free = false;
-        arr[counter]='*';
+        grageslots[counter]='*';
         v.location=counter;
         counter++;
         return free;
@@ -81,7 +88,7 @@ public:
     bool deleteVehicle(int count)
     {
         free = true;
-        arr[count]='_';
+        grageslots[count]='_';
         counter--;
     }
     int calulate_totalNum()
@@ -92,20 +99,21 @@ public:
 class slotselection
 {
     GarageSlot*d;
+    int vfin =2*(d->x);
 public:
     slotselection()
     {
-        d=new GarageSlot;
+        d=new GarageSlot();
     }
     int place = -1;
-    int slotselectionn(vehicle ve, GarageSlot *g)
+    int slotselect(vehicle ve, GarageSlot *g)
     {
         d=g;
         if (ve.length <= 200 &&ve.width<=120)
         {
-            for(int j=0; j<20; j++)
+            for(int j=0; j< d->x; j++)
             {
-                if(d->arr[j]=='_')
+                if(d->grageslots[j]=='_')
                 {
                     cout<<"slot[" <<j+1<<"]is the best place"<<endl;
                     place = j ;
@@ -115,9 +123,9 @@ public:
         }
         else if (ve.length <= 240 &&ve.width<=140)
         {
-            for(int j=20; j<40; j++)
+            for(int j=d->x; j< vfin; j++)
             {
-                if(d->arr[j]=='_')
+                if(d->grageslots[j]=='_')
                 {
                     cout<<"slot[" <<j<<"]is the best place"<<endl;
                     place = j ;
@@ -144,7 +152,7 @@ class Garage
 public:
     Garage(int s)
     {
-        this->slots=new GarageSlot();
+        this->slots=new GarageSlot(s);
     }
     vehicle* obj;
     GarageSlot* slots;
@@ -161,7 +169,7 @@ public:
         }
         else
         {
-            ss->slotselectionn(v,slots);
+            ss->slotselect(v,slots);
             if (ss->place >= 0)
             {
 
@@ -174,6 +182,14 @@ public:
                 cout<< "sorry no place for your car"<<endl;
 
         }
+    }
+    void displayavailableslots()
+    {
+        for (int i =0;i<(2*slots->x);i++)
+        {
+            cout << slots->grageslots[i]<<"  " ;
+        }
+
     }
     void parkout(vehicle v)
     {
@@ -293,6 +309,11 @@ int main()
             cout << "The total number of vehicles used the parking garage is: " << p.slots->calulate_totalNum()<< endl;
         }
         else if (choice==5)
+        {
+            p.displayavailableslots();
+            return 0;
+        }
+        else if (choice==6)
         {
             cout << "The program has been exited successfully.\n";
             return 0;
